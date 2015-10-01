@@ -37,6 +37,39 @@ And push your app to Heroku:
 $ git push heroku master
 ```
 
+The first deploy will take a long time because it must download all dependencies. But they will be cached, so the next deploy will be faster.
+
+## Database
+
+The buildpack will automatically set up the connection URL for you, but you may need to include the PostgreSQL (or other vendor's) driver
+in your dependencies. Addd something like this to `project/Build.scala`:
+
+```
+libraryDependencies ++= Seq(
+  "org.postgresql" % "postgresql" % "9.4-1201-jdbc41"
+)
+```
+
+To run migrations, configure your `src/main/resources/application.conf` with something like this:
+
+```groovy
+production {
+  db {
+    default {
+      driver="org.postgresql.Driver"
+      url=${?JDBC_DATABASE_URL}
+    }
+  }
+}
+```
+
+You can get the value for `$JDBC_DATABASE_URL` by running `heroku run echo \$JDBC_DATABASE_URL`. Set that value locally, but add
+the arguments `ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory`, and then run:
+
+```
+./skinny db:migrate production default
+```
+
 ## Customizing
 
 By default, the buildpack runs your app with a command like:

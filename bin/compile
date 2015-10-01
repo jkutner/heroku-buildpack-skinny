@@ -43,7 +43,6 @@ export_env_dir() {
   fi
 }
 
-
 cache_copy() {
   rel_dir=$1
   from_dir=$2
@@ -77,21 +76,25 @@ install_nodejs ${nodejsVersion} ${BUILD_DIR}/.heroku/nodejs 2>&1 | indent
 PATH=${BUILD_DIR}/.heroku/nodejs/bin:$PATH
 
 # unpack cache
-CACHED_DIRS="$SBT_USER_HOME standalone-build target project/target project/boot"
+CACHED_DIRS="target project/target project/boot"
 for DIR in $CACHED_DIRS; do
   cache_copy $DIR $CACHE_DIR $BUILD_DIR
 done
 
+[ -d $CACHE_DIR/.ivy2 ] && mv $CACHE_DIR/.ivy2 $HOME/.ivy2
+
 # Build
 cd $BUILD_DIR
-echo "Executing: ./skinny package:standalone" | indent
-./skinny package:standalone < /dev/null 2>&1 | indent
+echo "-----> Executing: ./skinny package:standalone"
+./skinny package:standalone < /dev/null
 
-# Remove extras from slug
-rm -rf $BUILD_DIR/standalone-build/target/streams
+mv $HOME/.ivy2 $CACHE_DIR/.ivy2
 
 # repack cache
 mkdir -p $CACHE_DIR
 for DIR in $CACHED_DIRS; do
   cache_copy $DIR $BUILD_DIR $CACHE_DIR
 done
+
+# Remove extras from slug
+rm -rf $BUILD_DIR/standalone-build/target/streams
