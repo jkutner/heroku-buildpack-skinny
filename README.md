@@ -37,6 +37,28 @@ And push your app to Heroku:
 $ git push heroku master
 ```
 
+## Customizing
+
+By default, the buildpack runs your app with a command like:
+
+```
+java $JAVA_OPTS -Dskinny.port=$PORT -Dskinny.env=production -Ddb.default.url=$JDBC_DATABASE_URL -Ddb.default.user=$JDBC_DATABASE_USER -Ddb.default.password=$JDBC_DATABASE_PASSWORD -jar standalone-build/target/scala-2.11/*.jar
+```
+
+You can customize this by setting `JAVA_OPTS` like this:
+
+```
+$ heroku config:set JAVA_OPTS=""
+```
+
+Or you can create a [Procfile] in the root directory with contents like this:
+
+```
+web: java \$JAVA_OPTS -Dskinny.port=\$PORT -Dskinny.env=production -Ddb.default.url=\$JDBC_DATABASE_URL -Ddb.default.user=\$JDBC_DATABASE_USER -Ddb.default.password=\$JDBC_DATABASE_PASSWORD -jar standalone-build/target/scala-2.11/*.jar
+```
+
+Then add the Procfile to Git and redeploy with `git push heroku master`.
+
 ## License
 
 MIT
