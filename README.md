@@ -1,6 +1,6 @@
 # Heroku Skinny Buildpack
 
-This is a [Heroku buildpack]() for the [Skinny framework](http://skinny-framework.org/).
+This is a [Heroku buildpack](https://devcenter.heroku.com/articles/buildpacks) for the [Skinny framework](http://skinny-framework.org/).
 
 ## Usage
 
@@ -48,10 +48,10 @@ java $JAVA_OPTS -Dskinny.port=$PORT -Dskinny.env=production -Ddb.default.url=$JD
 You can customize this by setting `JAVA_OPTS` like this:
 
 ```
-$ heroku config:set JAVA_OPTS=""
+$ heroku config:set JAVA_OPTS="-XX:+UseCompressedOops"
 ```
 
-Or you can create a [Procfile] in the root directory with contents like this:
+Or you can create a [Procfile](https://devcenter.heroku.com/articles/procfile) in the root directory with contents like this:
 
 ```
 web: java \$JAVA_OPTS -Dskinny.port=\$PORT -Dskinny.env=production -Ddb.default.url=\$JDBC_DATABASE_URL -Ddb.default.user=\$JDBC_DATABASE_USER -Ddb.default.password=\$JDBC_DATABASE_PASSWORD -jar standalone-build/target/scala-2.11/*.jar
