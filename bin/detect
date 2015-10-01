@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# bin/use <build-dir>
+
+if [ -f $1/skinny ]; then
+  echo "Skinny" && exit 0
+fi
+echo "no" && exit 1
